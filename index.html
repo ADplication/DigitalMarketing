@@ -22,87 +22,85 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script>
-       document.addEventListener("DOMContentLoaded", function() {
-    const monthDropdown = document.getElementById('month');
-    const subcategoryDropdown = document.getElementById('subcategory');
-    const submitBtn = document.getElementById('submitBtn');
+      document.addEventListener("DOMContentLoaded", function() {
+        const categoryDropdown = document.getElementById('category');
+        const monthDropdown = document.getElementById('month');
+        const subcategoryDropdown = document.getElementById('subcategory');
+        const submitBtn = document.getElementById('submitBtn');
+        function fetchSubcategoryData(selectedCategory, selectedMonth) {
+            return fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
+                .then(response => response.json())
+                .then(data => {
+                    return data[selectedCategory].map(item => item["Subcategory Name"]);
+                })
+                .catch(error => {
+                    console.error('Error fetching subcategory data:', error);
+                    return [];
+                });
+        }
 
-    function fetchSubcategoryData(selectedMonth) {
-        return fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
-            .then(response => response.json())
-            .then(data => {
-                return Object.keys(data).flatMap(category => data[category].map(item => item["Subcategory Name"]));
-            })
-            .catch(error => {
-                console.error('Error fetching subcategory data:', error);
-                return [];
+        function populateSubcategoryDropdown(subcategories) {
+            subcategoryDropdown.innerHTML = '';
+            subcategories.forEach(subcategory => {
+                const option = document.createElement('option');
+                option.value = subcategory;
+                option.text = subcategory;
+                subcategoryDropdown.add(option);
             });
-    }
-
-    function populateSubcategoryDropdown(subcategories) {
-        subcategoryDropdown.innerHTML = '';
-        subcategories.forEach(subcategory => {
-            const option = document.createElement('option');
-            option.value = subcategory;
-            option.text = subcategory;
-            subcategoryDropdown.add(option);
-        });
-    }
-
-    function displayDashboard(selectedMonth, selectedSubcategory) {
-        fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
-            .then(response => response.json())
-            .then(data => {
-                const selectedData = Object.values(data).flat().find(item => item["Subcategory Name"] === selectedSubcategory);
-                const dashboardContainer = document.querySelector('.dashboard-container');
-                dashboardContainer.innerHTML = '';
-                if (selectedData) {
+        }
+        function displayDashboard(selectedCategory, selectedMonth, selectedSubcategory) {
+            fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
+                .then(response => response.json())
+                .then(data => {
+                    const selectedData = data[selectedCategory].find(item => item["Subcategory Name"] === selectedSubcategory);
+                    const dashboardContainer = document.querySelector('.dashboard-container');
+                    dashboardContainer.innerHTML = ''; 
                     const dashboardElement = document.createElement('div');
                     dashboardElement.classList.add('dashboard-element');
-                    const formattedROAS = selectedData.ROAS.toFixed(1);
-                    const formattedCPC = selectedData.CPC.toFixed(2);
-                    const formattedACoS = (selectedData.ACoS * 100).toFixed(2) + '%';
+                    var formattedNum = selectedData.ROAS.toFixed(1);
                     dashboardElement.innerHTML = `
-                        <h2>Subcategory</h2>
-                        <p>${selectedData["Subcategory Name"]}</p>
-                        <h2>ROAS</h2>
-                        <p>${formattedROAS}</p>
-                        <h2>CPC</h2>
-                        <p>${formattedCPC}</p>
-                        <h2>ACoS</h2>
-                        <p>${formattedACoS}</p>
+                        <h2>${selectedData["Subcategory Name"]}</h2>
+                        <p>ROAS: ${formattedNum}</p>
                     `;
                     dashboardContainer.appendChild(dashboardElement);
-                } else {
-                    dashboardContainer.innerHTML = '<p>No data found for the selected subcategory.</p>';
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }
-
-    monthDropdown.addEventListener('change', function() {
-        const selectedMonth = monthDropdown.value;
-        fetchSubcategoryData(selectedMonth)
-            .then(subcategories => {
-                populateSubcategoryDropdown(subcategories);
-            });
-    });
-
-    submitBtn.addEventListener('click', function() {
-        const selectedMonth = monthDropdown.value;
-        const selectedSubcategory = subcategoryDropdown.value;
-        displayDashboard(selectedMonth, selectedSubcategory);
-    });
-});
-
-document.querySelectorAll('a.smoothscroll').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+        categoryDropdown.addEventListener('change', function() {
+            const selectedCategory = categoryDropdown.value;
+            const selectedMonth = monthDropdown.value;
+            fetchSubcategoryData(selectedCategory, selectedMonth)
+                .then(subcategories => {
+                    populateSubcategoryDropdown(subcategories);
+                });
+        });
+        monthDropdown.addEventListener('change', function() {
+            const selectedCategory = categoryDropdown.value;
+            const selectedMonth = monthDropdown.value;
+            
+            fetchSubcategoryData(selectedCategory, selectedMonth)
+                .then(subcategories => {
+                    populateSubcategoryDropdown(subcategories);
+                });
+        });
+        
+        submitBtn.addEventListener('click', function() {
+            const selectedCategory = categoryDropdown.value;
+            const selectedMonth = monthDropdown.value;
+            const selectedSubcategory = subcategoryDropdown.value;
+            displayDashboard(selectedCategory, selectedMonth, selectedSubcategory);
         });
     });
-});
+        
+    document.querySelectorAll('a.smoothscroll').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+    </script>
 
 
     </script>

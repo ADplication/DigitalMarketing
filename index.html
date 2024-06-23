@@ -22,7 +22,7 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+       document.addEventListener("DOMContentLoaded", function() {
     const monthDropdown = document.getElementById('month');
     const subcategoryDropdown = document.getElementById('subcategory');
     const submitBtn = document.getElementById('submitBtn');
@@ -31,7 +31,7 @@
         return fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
             .then(response => response.json())
             .then(data => {
-                return Object.values(data).map(item => item["Subcategory Name"]);
+                return Object.keys(data).flatMap(category => data[category].map(item => item["Subcategory Name"]));
             })
             .catch(error => {
                 console.error('Error fetching subcategory data:', error);
@@ -53,21 +53,29 @@
         fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
             .then(response => response.json())
             .then(data => {
-                const selectedData = Object.values(data).find(item => item["Subcategory Name"] === selectedSubcategory);
+                const selectedData = Object.values(data).flat().find(item => item["Subcategory Name"] === selectedSubcategory);
                 const dashboardContainer = document.querySelector('.dashboard-container');
-                dashboardContainer.innerHTML = ''; 
-                const dashboardElement = document.createElement('div');
-                dashboardElement.classList.add('dashboard-element');
-                var formattedROAS = selectedData.ROAS.toFixed(1);
-                var formattedCPC = selectedData.CPC.toFixed(2);
-                var formattedACoS = selectedData.ACoS.toFixed(2);
-                dashboardElement.innerHTML = `
-                    <h2>Subcategory: ${selectedData["Subcategory Name"]}</h2>
-                    <p>ROAS: ${formattedROAS}</p>
-                    <p>CPC: ${formattedCPC}</p>
-                    <p>ACoS: ${formattedACoS}</p>
-                `;
-                dashboardContainer.appendChild(dashboardElement);
+                dashboardContainer.innerHTML = '';
+                if (selectedData) {
+                    const dashboardElement = document.createElement('div');
+                    dashboardElement.classList.add('dashboard-element');
+                    const formattedROAS = selectedData.ROAS.toFixed(1);
+                    const formattedCPC = selectedData.CPC.toFixed(2);
+                    const formattedACoS = (selectedData.ACoS * 100).toFixed(2) + '%';
+                    dashboardElement.innerHTML = `
+                        <h2>Subcategory</h2>
+                        <p>${selectedData["Subcategory Name"]}</p>
+                        <h2>ROAS</h2>
+                        <p>${formattedROAS}</p>
+                        <h2>CPC</h2>
+                        <p>${formattedCPC}</p>
+                        <h2>ACoS</h2>
+                        <p>${formattedACoS}</p>
+                    `;
+                    dashboardContainer.appendChild(dashboardElement);
+                } else {
+                    dashboardContainer.innerHTML = '<p>No data found for the selected subcategory.</p>';
+                }
             })
             .catch(error => console.error('Error fetching data:', error));
     }
@@ -95,6 +103,7 @@ document.querySelectorAll('a.smoothscroll').forEach(anchor => {
         });
     });
 });
+
 
     </script>
     <style>

@@ -21,85 +21,7 @@
     <script src="js/pace.min.js"></script>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const categoryDropdown = document.getElementById('category');
-        const monthDropdown = document.getElementById('month');
-        const subcategoryDropdown = document.getElementById('subcategory');
-        const submitBtn = document.getElementById('submitBtn');
-        function fetchSubcategoryData(selectedCategory, selectedMonth) {
-            return fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
-                .then(response => response.json())
-                .then(data => {
-                    return data[selectedCategory].map(item => item["Subcategory Name"]);
-                })
-                .catch(error => {
-                    console.error('Error fetching subcategory data:', error);
-                    return [];
-                });
-        }
-
-        function populateSubcategoryDropdown(subcategories) {
-            subcategoryDropdown.innerHTML = '';
-            subcategories.forEach(subcategory => {
-                const option = document.createElement('option');
-                option.value = subcategory;
-                option.text = subcategory;
-                subcategoryDropdown.add(option);
-            });
-        }
-        function displayDashboard(selectedCategory, selectedMonth, selectedSubcategory) {
-            fetch(`Category_Benchmarks_${selectedMonth}_2024.json`)
-                .then(response => response.json())
-                .then(data => {
-                    const selectedData = data[selectedCategory].find(item => item["Subcategory Name"] === selectedSubcategory);
-                    const dashboardContainer = document.querySelector('.dashboard-container');
-                    dashboardContainer.innerHTML = ''; 
-                    const dashboardElement = document.createElement('div');
-                    dashboardElement.classList.add('dashboard-element');
-                    var formattedNum = selectedData.ROAS.toFixed(1);
-                    dashboardElement.innerHTML = `
-                        <h2>${selectedData["Subcategory Name"]}</h2>
-                        <p>ROAS: ${formattedNum}</p>
-                    `;
-                    dashboardContainer.appendChild(dashboardElement);
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
-        categoryDropdown.addEventListener('change', function() {
-            const selectedCategory = categoryDropdown.value;
-            const selectedMonth = monthDropdown.value;
-            fetchSubcategoryData(selectedCategory, selectedMonth)
-                .then(subcategories => {
-                    populateSubcategoryDropdown(subcategories);
-                });
-        });
-        monthDropdown.addEventListener('change', function() {
-            const selectedCategory = categoryDropdown.value;
-            const selectedMonth = monthDropdown.value;
-            
-            fetchSubcategoryData(selectedCategory, selectedMonth)
-                .then(subcategories => {
-                    populateSubcategoryDropdown(subcategories);
-                });
-        });
-        
-        submitBtn.addEventListener('click', function() {
-            const selectedCategory = categoryDropdown.value;
-            const selectedMonth = monthDropdown.value;
-            const selectedSubcategory = subcategoryDropdown.value;
-            displayDashboard(selectedCategory, selectedMonth, selectedSubcategory);
-        });
-    });
-        
-    document.querySelectorAll('a.smoothscroll').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
+<script> document.addEventListener("DOMContentLoaded", function() { const categoryDropdown = document.getElementById('category'); const monthDropdown = document.getElementById('month'); const subcategoryDropdown = document.getElementById('subcategory'); const submitBtn = document.getElementById('submitBtn'); function fetchSubcategoryData(selectedCategory, selectedMonth) { return fetch(`Category_Benchmarks_${selectedMonth}_2024.json`) .then(response => response.json()) .then(data => { return data[selectedCategory].map(item => item["Subcategory Name"]); }) .catch(error => { console.error('Error fetching subcategory data:', error); return []; }); } function populateSubcategoryDropdown(subcategories) { subcategoryDropdown.innerHTML = ''; subcategories.forEach(subcategory => { const option = document.createElement('option'); option.value = subcategory; option.text = subcategory; subcategoryDropdown.add(option); }); } function displayDashboard(selectedCategory, selectedMonth, selectedSubcategory) { fetch(`Category_Benchmarks_${selectedMonth}_2024.json`) .then(response => response.json()) .then(data => { const selectedData = data[selectedCategory].find(item => item["Subcategory Name"] === selectedSubcategory); const dashboardContainer = document.querySelector('.dashboard-container'); dashboardContainer.innerHTML = ''; const dashboardElement = document.createElement('div'); dashboardElement.classList.add('dashboard-element'); var formattedNum = selectedData.ROAS.toFixed(1); dashboardElement.innerHTML = ` <h2>${selectedData["Subcategory Name"]}</h2> <p>ROAS: ${formattedNum}</p> `; dashboardContainer.appendChild(dashboardElement); }) .catch(error => console.error('Error fetching data:', error)); } categoryDropdown.addEventListener('change', function() { const selectedCategory = categoryDropdown.value; const selectedMonth = monthDropdown.value; fetchSubcategoryData(selectedCategory, selectedMonth) .then(subcategories => { populateSubcategoryDropdown(subcategories); }); }); monthDropdown.addEventListener('change', function() { const selectedCategory = categoryDropdown.value; const selectedMonth = monthDropdown.value; fetchSubcategoryData(selectedCategory, selectedMonth) .then(subcategories => { populateSubcategoryDropdown(subcategories); }); }); submitBtn.addEventListener('click', function() { const selectedCategory = categoryDropdown.value; const selectedMonth = monthDropdown.value; const selectedSubcategory = subcategoryDropdown.value; displayDashboard(selectedCategory, selectedMonth, selectedSubcategory); }); }); document.querySelectorAll('a.smoothscroll').forEach(anchor => { anchor.addEventListener('click', function (e) { e.preventDefault(); document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); });
     </script>
 
 
@@ -484,27 +406,48 @@
         </div>
     </div>
         <!-- end services-list -->
-        <hr>
+         <hr>
         <div class="row  services-list block-1-2 block-tab-full">
             <div class="col-block service-item" data-aos="fade-up">
                 <div class="service-icon"><i class="icon-lego-block"></i></div>
                     <div class="service-text dropdown-container">
                         <div class="">
-                            <h3 class="h2">Return Dashboard</h3>
+                            <h3 class="h2">Quick dashboard</h3>
                             <p>To check your category performance (ROAS) on Amazon.</p>
                             
                         <div class="form-container">
                             <div>
                                 <label for="month">Select Month:</label>
                                 <select id="month">
-                                    <!-- Options should be populated dynamically or predefined -->
+                                    <option>--Select--</option>
                                     <option value="Jan">January</option>
-                                    <!-- Add other months as needed -->
+                                    <option value="Feb">February</option>
+                                    <option value="Mar">March</option>
+                                    <option value="Apr">April</option>
+                                    <option value="May">May</option>
+                                    <option value="Jun">June</option>
+                                    <option value="Jul">July</option>
+                                    <option value="Aug">August</option>
+                                    <option value="Sep">September</option>
+                                    <option value="Oct">October</option>
+                                    <option value="Nov">November</option>
+                                    <option value="Dec">December</option>
                                 </select>
-                                <br>
+                            </div>
+                            <div>
+                                <label for="category">Select Category:</label>
+                                <select id="category">
+                                    <option>--Select--</option>
+                                    <option value="SP">SP</option>
+                                    <option value="SB">SB</option>
+                                    <option value="SBv">SBv</option>
+                                    <option value="SD">SD</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label for="subcategory">Select Subcategory:</label>
                                 <select id="subcategory">
-                                    <!-- Options will be populated dynamically -->
+                                    <!-- Subcategory options will be populated dynamically -->
                                 </select>
                             </div>
                             <div>

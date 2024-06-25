@@ -21,13 +21,10 @@
     <script src="js/pace.min.js"></script>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-<script> document.addEventListener("DOMContentLoaded", function() { const categoryDropdown = document.getElementById('category'); const monthDropdown = document.getElementById('month'); const subcategoryDropdown = document.getElementById('subcategory'); const submitBtn = document.getElementById('submitBtn'); function fetchSubcategoryData(selectedCategory, selectedMonth) { return fetch(`Category_Benchmarks_${selectedMonth}_2024.json`) .then(response => response.json()) .then(data => { return data[selectedCategory].map(item => item["Subcategory Name"]); }) .catch(error => { console.error('Error fetching subcategory data:', error); return []; }); } function populateSubcategoryDropdown(subcategories) { subcategoryDropdown.innerHTML = ''; subcategories.forEach(subcategory => { const option = document.createElement('option'); option.value = subcategory; option.text = subcategory; subcategoryDropdown.add(option); }); } function displayDashboard(selectedCategory, selectedMonth, selectedSubcategory) { fetch(`Category_Benchmarks_${selectedMonth}_2024.json`) .then(response => response.json()) .then(data => { const selectedData = data[selectedCategory].find(item => item["Subcategory Name"] === selectedSubcategory); const dashboardContainer = document.querySelector('.dashboard-container'); dashboardContainer.innerHTML = ''; const dashboardElement = document.createElement('div'); dashboardElement.classList.add('dashboard-element'); var formattedNum = selectedData.ROAS.toFixed(1); dashboardElement.innerHTML = ` <h2>${selectedData["Subcategory Name"]}</h2> <p>ROAS: ${formattedNum}</p> `; dashboardContainer.appendChild(dashboardElement); }) .catch(error => console.error('Error fetching data:', error)); } categoryDropdown.addEventListener('change', function() { const selectedCategory = categoryDropdown.value; const selectedMonth = monthDropdown.value; fetchSubcategoryData(selectedCategory, selectedMonth) .then(subcategories => { populateSubcategoryDropdown(subcategories); }); }); monthDropdown.addEventListener('change', function() { const selectedCategory = categoryDropdown.value; const selectedMonth = monthDropdown.value; fetchSubcategoryData(selectedCategory, selectedMonth) .then(subcategories => { populateSubcategoryDropdown(subcategories); }); }); submitBtn.addEventListener('click', function() { const selectedCategory = categoryDropdown.value; const selectedMonth = monthDropdown.value; const selectedSubcategory = subcategoryDropdown.value; displayDashboard(selectedCategory, selectedMonth, selectedSubcategory); }); }); document.querySelectorAll('a.smoothscroll').forEach(anchor => { anchor.addEventListener('click', function (e) { e.preventDefault(); document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); });
-    </script>
 
 
-</script>
-
-document.addEventListener('DOMContentLoaded', () => {
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
     const monthDropdown = document.getElementById('month');
     const subcategoryDropdown = document.getElementById('subcategory');
     const form = document.getElementById('benchmarkForm');
@@ -109,7 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
     monthDropdown.dispatchEvent(new Event('change'));
 });
 
-    </script>
+</script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         .form-container div {
             display: inline-block;
@@ -492,62 +493,46 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="col-block service-item" data-aos="fade-up">
                 <div class="service-icon"><i class="icon-lego-block"></i></div>
                     <div class="service-text dropdown-container">
-                        <div class="">
-                            <h3 class="h2">Quick dashboard</h3>
+                        <div class="container mt-5">
+                            <h3 class="mb-4">Quick dashboard</h3>
                             <p>To check your category performance (ROAS) on Amazon.</p>
+                             <form id="benchmarkForm">
+                                <div class="form-group">
+                                    <label for="month">Month:</label>
+                                    <select class="form-control" id="month" name="month">
+                                        <option value="" disabled selected>Select Month</option>
+                                    </select>
+                                </div>
+                
+                                <div class="form-group">
+                                    <label for="subcategory">Subcategory:</label>
+                                    <select class="form-control" id="subcategory" name="subcategory" disabled>
+                                        <option value="" disabled selected>Select Subcategory</option>
+                                    </select>
+                                </div>
+                
+                                    <button type="submit" class="btn btn-primary" disabled>Submit</button>
+                                </form>
+                
+                            </div>
+                    </div>
+                </div>
                             
-                        <div class="form-container">
-                            <div>
-                                <label for="month">Select Month:</label>
-                                <select id="month">
-                                    <option>--Select--</option>
-                                    <option value="Jan">January</option>
-                                    <option value="Feb">February</option>
-                                    <option value="Mar">March</option>
-                                    <option value="Apr">April</option>
-                                    <option value="May">May</option>
-                                    <option value="Jun">June</option>
-                                    <option value="Jul">July</option>
-                                    <option value="Aug">August</option>
-                                    <option value="Sep">September</option>
-                                    <option value="Oct">October</option>
-                                    <option value="Nov">November</option>
-                                    <option value="Dec">December</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="category">Select Category:</label>
-                                <select id="category">
-                                    <option>--Select--</option>
-                                    <option value="SP">SP</option>
-                                    <option value="SB">SB</option>
-                                    <option value="SBv">SBv</option>
-                                    <option value="SD">SD</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="subcategory">Select Subcategory:</label>
-                                <select id="subcategory">
-                                    <!-- Subcategory options will be populated dynamically -->
-                                </select>
-                            </div>
-                            <div>
-                                <button id="submitBtn">Submit</button>
-                            </div>
+                <div class="col-block service-item" data-aos="fade-up">
+                                
+                    <div class="service-text">
+                        <div id="results" class="mt-4" style="display: none;">
+                            <h2 id="subcategoryHeading"></h2>
+                            <p id="cpc"></p>
+                            <p>Cost Per Click</p>
+                            <p id="roas"></p>
+                            <p>Cost Per Click</p>
+                            <p id="acos"></p>
+                            <p>Advertisement cost on spend</p>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-block service-item" data-aos="fade-up">
-                
-                <div class="service-text">
-                    <div class="dashboard-container display-1">
-                        <!-- Dashboard elements will be displayed here -->
-                    </div>
-                </div>
-            </div>
-        </div>
     </section> <!-- end services -->
 <hr style="color:grey">
     <!-- works

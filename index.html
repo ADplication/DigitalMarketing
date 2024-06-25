@@ -27,6 +27,87 @@
 
 </script>
 
+document.addEventListener('DOMContentLoaded', () => {
+    const monthDropdown = document.getElementById('month');
+    const subcategoryDropdown = document.getElementById('subcategory');
+    const form = document.getElementById('benchmarkForm');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const results = document.getElementById('results');
+    const subcategoryHeading = document.getElementById('subcategoryHeading');
+    const cpc = document.getElementById('cpc');
+    const roas = document.getElementById('roas');
+    const acos = document.getElementById('acos');
+
+    const months = ['Jan 2024', 'Feb 2024', 'Mar 2024']; // Add more months as needed
+    const monthFiles = {
+        'Jan 2024': 'Category_Benchmarks_Jan_2024.json',
+        'Feb 2024': 'Category_Benchmarks_Feb_2024.json',
+        'Mar 2024': 'Category_Benchmarks_Mar_2024.json'
+        // Add more month-to-file mappings as needed
+    };
+
+    // Populate the month dropdown
+    months.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month;
+        option.textContent = month;
+        monthDropdown.appendChild(option);
+    });
+
+    // Load subcategories when a month is selected
+    monthDropdown.addEventListener('change', () => {
+        const selectedMonth = monthDropdown.value;
+        const file = monthFiles[selectedMonth];
+
+        subcategoryDropdown.innerHTML = '<option value="" disabled selected>Select Subcategory</option>'; // Clear previous options and add "Select Subcategory"
+
+        if (file) {
+            fetch(file)
+                .then(response => response.json())
+                .then(data => {
+                    data.SP.forEach(subcategory => {
+                        const option = document.createElement('option');
+                        option.value = subcategory['Subcategory Name'];
+                        option.textContent = subcategory['Subcategory Name'];
+                        subcategoryDropdown.appendChild(option);
+                    });
+                    subcategoryDropdown.disabled = false;
+                    submitButton.disabled = false;
+                });
+        } else {
+            subcategoryDropdown.disabled = true;
+            submitButton.disabled = true;
+        }
+    });
+
+    // Display subcategory data on form submit
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+
+        const selectedMonth = monthDropdown.value;
+        const selectedSubcategory = subcategoryDropdown.value;
+        const file = monthFiles[selectedMonth];
+
+        if (file) {
+            fetch(file)
+                .then(response => response.json())
+                .then(data => {
+                    const subcategoryData = data.SP.find(item => item['Subcategory Name'] === selectedSubcategory);
+
+                    if (subcategoryData) {
+                        subcategoryHeading.textContent = selectedSubcategory;
+                        cpc.textContent = `CPC: ${subcategoryData.CPC}`;
+                        roas.textContent = `ROAS: ${subcategoryData.ROAS}`;
+                        acos.textContent = `ACoS: ${subcategoryData.ACoS}`;
+                        results.style.display = 'block';
+                    }
+                });
+        }
+    });
+
+    // Trigger change event to reset the subcategory dropdown
+    monthDropdown.dispatchEvent(new Event('change'));
+});
 
     </script>
     <style>

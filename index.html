@@ -25,96 +25,96 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const monthDropdown = document.getElementById('month');
-        const subcategoryDropdown = document.getElementById('subcategory');
-        const form = document.getElementById('benchmarkForm');
-        const submitButton = form.querySelector('button[type="submit"]');
-        const results = document.getElementById('results');
-        const subcategoryHeading = document.getElementById('subcategoryHeading');
-        const cpc = document.getElementById('cpc');
-        const roas = document.getElementById('roas');
-        const acos = document.getElementById('acos');
+    const monthDropdown = document.getElementById('month');
+    const subcategoryDropdown = document.getElementById('subcategory');
+    const form = document.getElementById('benchmarkForm');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const results = document.getElementById('results');
+    const subcategoryHeading = document.getElementById('subcategoryHeading');
+    const cpc = document.getElementById('cpc');
+    const roas = document.getElementById('roas');
+    const acos = document.getElementById('acos');
 
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; // Add more months as needed
-        const monthFiles = {
-            'Jan': 'Category_Benchmarks_Jan_2024.json',
-            'Feb': 'Category_Benchmarks_Feb_2024.json',
-            'Mar': 'Category_Benchmarks_Mar_2023.json',
-            'Apr': 'Category_Benchmarks_Apr_2023 (1).json',
-            'May': 'Category_Benchmarks_May_2023.json',
-            'Jun': 'Category_Benchmarks_Jun_2023.json',
-            'Jul': 'Category_Benchmarks_Jul_2023.json',
-            'Aug': 'Category_Benchmarks_Aug_2023.json',
-            'Sep': 'Category_Benchmarks_Sep_2023.json',
-            'Oct': 'Category_Benchmarks_Oct_2023.json',
-            'Nov': 'Category_Benchmarks_Nov_2023.json',
-            'Dec': 'Category_Benchmarks_Dec_2023.json'
-        };
+    const months = ['Jan', 'Feb', 'Mar', 'Apr','May' ,'Jun','Jul','Aug','Sep','Oct','Nov','Dec']; // Add more months as needed
+    const monthFiles = {
+        'Jan': 'Category_Benchmarks_Jan_2024.json',
+        'Feb': 'Category_Benchmarks_Feb_2024.json',
+        'Mar': 'Category_Benchmarks_Mar_2023.json',
+        'Apr': 'Category_Benchmarks_Apr_2023 (1).json',
+        'May': 'Category_Benchmarks_May_2023.json',
+        'Jun': 'Category_Benchmarks_Jun_2023.json',
+        'Jul': 'Category_Benchmarks_Jul_2023.json',
+        'Aug': 'Category_Benchmarks_Aug_2023.json',
+        'Sep': 'Category_Benchmarks_Sep_2023.json',
+        'Oct': 'Category_Benchmarks_Oct_2023.json',
+        'Nov': 'Category_Benchmarks_Nov_2023.json',
+        'Dec': 'Category_Benchmarks_Dec_2023.json'
+        
+    };
 
-        // Populate the month dropdown
-        months.forEach(month => {
-            const option = document.createElement('option');
-            option.value = month;
-            option.textContent = month;
-            monthDropdown.appendChild(option);
-        });
-
-        // Load subcategories when a month is selected
-        monthDropdown.addEventListener('change', () => {
-            const selectedMonth = monthDropdown.value;
-            const file = monthFiles[selectedMonth];
-
-            subcategoryDropdown.innerHTML = '<option value="" disabled selected>Select Subcategory</option>'; // Clear previous options and add "Select Subcategory"
-
-            if (file) {
-                fetch(file)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.SP.forEach(subcategory => {
-                            const option = document.createElement('option');
-                            option.value = subcategory['Subcategory Name'];
-                            option.textContent = subcategory['Subcategory Name'];
-                            subcategoryDropdown.appendChild(option);
-                        });
-                        subcategoryDropdown.disabled = false;
-                        submitButton.disabled = false;
-                    });
-            } else {
-                subcategoryDropdown.disabled = true;
-                submitButton.disabled = true;
-            }
-        });
-
-        // Display subcategory data on form submit
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-
-            const selectedMonth = monthDropdown.value;
-            const selectedSubcategory = subcategoryDropdown.value;
-            const file = monthFiles[selectedMonth];
-
-            if (file) {
-                fetch(file)
-                    .then(response => response.json())
-                    .then(data => {
-                        const subcategoryData = data.SP.find(item => item['Subcategory Name'] === selectedSubcategory);
-
-                        if (subcategoryData) {
-                            subcategoryHeading.textContent = selectedSubcategory;
-                            cpc.textContent = `CPC: ${parseFloat(subcategoryData.CPC).toFixed(3)}`;
-                            roas.textContent = `ROAS: ${parseFloat(subcategoryData.ROAS).toFixed(3)}`;
-                            acos.textContent = `ACOS: ${parseFloat(subcategoryData.ACOS).toFixed(3)}`;
-                            results.style.display = 'block';
-                        }
-                    });
-            }
-        });
-
-        // Trigger change event to reset the subcategory dropdown
-        monthDropdown.dispatchEvent(new Event('change'));
+    // Populate the month dropdown
+    months.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month;
+        option.textContent = month;
+        monthDropdown.appendChild(option);
     });
-</script>
 
+    // Load subcategories when a month is selected
+    monthDropdown.addEventListener('change', () => {
+        const selectedMonth = monthDropdown.value;
+        const file = monthFiles[selectedMonth];
+
+        subcategoryDropdown.innerHTML = '<option value="" disabled selected>Select Subcategory</option>'; // Clear previous options and add "Select Subcategory"
+
+        if (file) {
+            fetch(file)
+                .then(response => response.json())
+                .then(data => {
+                    data.SP.forEach(subcategory => {
+                        const option = document.createElement('option');
+                        option.value = subcategory['Subcategory Name'];
+                        option.textContent = subcategory['Subcategory Name'];
+                        subcategoryDropdown.appendChild(option);
+                    });
+                    subcategoryDropdown.disabled = false;
+                    submitButton.disabled = false;
+                });
+        } else {
+            subcategoryDropdown.disabled = true;
+            submitButton.disabled = true;
+        }
+    });
+
+    // Display subcategory data on form submit
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+
+        const selectedMonth = monthDropdown.value;
+        const selectedSubcategory = subcategoryDropdown.value;
+        const file = monthFiles[selectedMonth];
+
+        if (file) {
+            fetch(file)
+                .then(response => response.json())
+                .then(data => {
+                    const subcategoryData = data.SP.find(item => item['Subcategory Name'] === selectedSubcategory);
+
+                    if (subcategoryData) {
+                        subcategoryHeading.textContent = selectedSubcategory;
+                        cpc.textContent = CPC: ${subcategoryData.CPC};
+                        roas.textContent = ROAS: ${subcategoryData.ROAS};
+                        results.style.display = 'block';
+                    }
+                });
+        }
+    });
+
+    // Trigger change event to reset the subcategory dropdown
+    monthDropdown.dispatchEvent(new Event('change'));
+});
+
+</script>
 
     
     

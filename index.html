@@ -64,12 +64,16 @@
         const selectedMonth = monthDropdown.value;
         const file = monthFiles[selectedMonth];
 
+        console.log(`Selected month: ${selectedMonth}, file: ${file}`);
+
         subcategoryDropdown.innerHTML = '<option value="" disabled selected>Select Subcategory</option>'; // Clear previous options and add "Select Subcategory"
 
         if (file) {
             fetch(file)
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Fetched data:', data);
+
                     data.SP.forEach(subcategory => {
                         const option = document.createElement('option');
                         option.value = subcategory['Subcategory Name'];
@@ -98,11 +102,17 @@
         const selectedSubcategory = subcategoryDropdown.value;
         const file = monthFiles[selectedMonth];
 
+        console.log(`Submitting form with month: ${selectedMonth}, subcategory: ${selectedSubcategory}`);
+
         if (file) {
             fetch(file)
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Fetched data on submit:', data);
+
                     const subcategoryData = data.SP.find(item => item['Subcategory Name'] === selectedSubcategory);
+
+                    console.log('Subcategory data:', subcategoryData);
 
                     if (subcategoryData) {
                         subcategoryHeading.textContent = selectedSubcategory;

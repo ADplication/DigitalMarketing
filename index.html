@@ -24,7 +24,7 @@
 
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
     const monthDropdown = document.getElementById('month');
     const subcategoryDropdown = document.getElementById('subcategory');
     const form = document.getElementById('benchmarkForm');
@@ -33,9 +33,8 @@
     const subcategoryHeading = document.getElementById('subcategoryHeading');
     const cpc = document.getElementById('cpc');
     const roas = document.getElementById('roas');
-    const acos = document.getElementById('acos');
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; // Add more months as needed
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const monthFiles = {
         'Jan': 'Category_Benchmarks_Jan_2024.json',
         'Feb': 'Category_Benchmarks_Feb_2024.json',
@@ -118,7 +117,6 @@
                         subcategoryHeading.textContent = selectedSubcategory;
                         cpc.textContent = `CPC: ${subcategoryData.CPC}`;
                         roas.textContent = `ROAS: ${subcategoryData.ROAS}`;
-                        acos.textContent = `ACOS: ${subcategoryData.ACOS}`;
                         results.style.display = 'block';
                     } else {
                         console.error('No subcategory data found');
@@ -519,49 +517,45 @@
     </div>
         <!-- end services-list -->
          <hr>
-        <div class="row  services-list block-1-2 block-tab-full">
-            <div class="col-block service-item" data-aos="fade-up">
-                <div class="service-icon"><i class="icon-lego-block"></i></div>
-                    <div class="service-text dropdown-container">
-                        <div class="container mt-5">
-                            <h3 class="mb-4"> Expected Category Return</h3>
-                            <p>To check your category performance (ROAS) on Amazon.</p>
-                             <form id="benchmarkForm">
-                                <div class="form-group">
-                                    <label for="month">Month:</label>
-                                    <select class="form-control" id="month" name="month">
-                                        <option value="" disabled selected>Select Month</option>
-                                    </select>
-                                </div>
-                
-                                <div class="form-group">
-                                    <label for="subcategory">Subcategory:</label>
-                                    <select class="form-control" id="subcategory" name="subcategory" disabled>
-                                        <option value="" disabled selected>Select Subcategory</option>
-                                    </select>
-                                </div>
-                
-                                    <button type="submit" class="btn btn-primary" disabled>Submit</button>
-                                </form>
-                
-                            </div>
+   <div class="row services-list block-1-2 block-tab-full">
+    <div class="col-block service-item" data-aos="fade-up">
+        <div class="service-icon"><i class="icon-lego-block"></i></div>
+        <div class="service-text dropdown-container">
+            <div class="container mt-5">
+                <h3 class="mb-4">Expected Category Return</h3>
+                <p>To check your category performance (ROAS) on Amazon.</p>
+                <form id="benchmarkForm">
+                    <div class="form-group">
+                        <label for="month">Month:</label>
+                        <select class="form-control" id="month" name="month">
+                            <option value="" disabled selected>Select Month</option>
+                        </select>
                     </div>
-                </div>
-                            
-                <div class="col-block service-item" data-aos="fade-up">
-                                
-                    <div class="service-text mt-4" id="results" style="display: none;">
-           
-                            <h2 id="subcategoryHeading"></h2>
-                            <p id="cpc"></p>
-                            <h3>Cost Per Click</h3>
-                            <p id="roas"></p>
-                            <h3>Return on Ad Spend</h3>
-                            
-                    
+
+                    <div class="form-group">
+                        <label for="subcategory">Subcategory:</label>
+                        <select class="form-control" id="subcategory" name="subcategory" disabled>
+                            <option value="" disabled selected>Select Subcategory</option>
+                        </select>
                     </div>
-                </div>
+
+                    <button type="submit" class="btn btn-primary" disabled>Submit</button>
+                </form>
             </div>
+        </div>
+    </div>
+
+    <div class="col-block service-item" data-aos="fade-up">
+        <div class="service-text mt-4" id="results" style="display: none;">
+            <h2 id="subcategoryHeading"></h2>
+            <p id="cpc"></p>
+            <h3>Cost Per Click</h3>
+            <p id="roas"></p>
+            <h3>Return on Ad Spend</h3>
+        </div>
+    </div>
+</div>
+
     </section> <!-- end services -->
 <hr style="color:grey">
     <!-- works

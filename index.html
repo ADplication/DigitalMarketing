@@ -114,11 +114,12 @@
                     console.log('Subcategory data:', subcategoryData);
 
                     if (subcategoryData) {
-                        subcategoryHeading.textContent = selectedSubcategory;
-                        cpc.textContent = `CPC: ${subcategoryData.CPC}`;
-                        roas.textContent = `ROAS: ${subcategoryData.ROAS}`;
-                        results.style.display = 'block';
-                    } else {
+    subcategoryHeading.textContent = selectedSubcategory;
+    cpc.textContent = `CPC: ${parseFloat(subcategoryData.CPC).toFixed(1)}`;
+    roas.textContent = `ROAS: ${parseFloat(subcategoryData.ROAS).toFixed(1)}`;
+    results.style.display = 'block';
+}
+
                         console.error('No subcategory data found');
                     }
                 })
